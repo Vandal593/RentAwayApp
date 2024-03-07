@@ -82,7 +82,7 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
     setState(() {
       _imagenes = selectedImages;
     });
-    }
+  }
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -124,7 +124,10 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
             tel = '+593$tel';
           }
         }
-
+        var userState = Provider.of<UserState>(context, listen: false);
+        if (kDebugMode) {
+          print(userState.userId.toString());
+        }
         final nuevaPropiedad = Propiedad(
           titulo: tituloController.text,
           descripcion: descripcionController.text,
@@ -136,7 +139,7 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
           fotos: urlsImagenes,
           comentarios: [],
           disponibilidad: {'desde': DateTime.now(), 'hasta': DateTime.now()},
-          propietario: 'usuarioID',
+          propietario: userState.userId.toString(),
           fechaCreacion: DateTime.now(),
           ultimaActualizacion: DateTime.now(),
           coordenadas: coordenadas,
@@ -178,169 +181,212 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
     var userState = Provider.of<UserState>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registrar Propiedad: ${userState.userId}'),
+        title: Text(
+          'Registrar Propiedad: ${userState.userId}',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade400,
+        iconTheme: const IconThemeData(
+          color:
+              Colors.white, // Cambia el color de la flecha de regreso a blanco
+        ),
       ),
-      backgroundColor: const Color.fromARGB(255, 189, 226, 243),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: tituloController,
-                      decoration: const InputDecoration(labelText: 'Título'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese un título';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: descripcionController,
-                      decoration: const InputDecoration(labelText: 'Descripción'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese una descripción';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: tipoController,
-                      decoration:
-                          const InputDecoration(labelText: 'Tipo de Propiedad'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese el tipo de propiedad';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: precioController,
-                      decoration: const InputDecoration(labelText: 'Precio'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese el precio';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: calleController,
-                      decoration: const InputDecoration(labelText: 'Calle'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese la calle';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: ciudadController,
-                      decoration: const InputDecoration(labelText: 'Ciudad'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese la ciudad';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: paisController,
-                      decoration: const InputDecoration(labelText: 'País'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese el país';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: latitudController,
-                      decoration: const InputDecoration(labelText: 'Latitud'),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese la latitud';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: longitudController,
-                      decoration: const InputDecoration(labelText: 'Longitud'),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese la longitud';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: telefonoController,
-                      decoration: const InputDecoration(labelText: 'Telefono'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese el telefono';
-                        }
-                        return null;
-                      },
-                    ),
-                    ElevatedButton(
-                      onPressed: _pickImagePrincipal,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromARGB(255, 245, 229,
-                                161)), // Aquí establece el color de fondo del botón
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue.shade400, Colors.white],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).padding.top,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          TextFormField(
+                            controller: tituloController,
+                            decoration:
+                                const InputDecoration(labelText: 'Título'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese un título';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: descripcionController,
+                            decoration:
+                                const InputDecoration(labelText: 'Descripción'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese una descripción';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: tipoController,
+                            decoration: const InputDecoration(
+                                labelText: 'Tipo de Propiedad'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el tipo de propiedad';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: precioController,
+                            decoration:
+                                const InputDecoration(labelText: 'Precio'),
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el precio';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: calleController,
+                            decoration:
+                                const InputDecoration(labelText: 'Calle'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la calle';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: ciudadController,
+                            decoration:
+                                const InputDecoration(labelText: 'Ciudad'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la ciudad';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: paisController,
+                            decoration:
+                                const InputDecoration(labelText: 'País'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el país';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: latitudController,
+                            decoration:
+                                const InputDecoration(labelText: 'Latitud'),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la latitud';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: longitudController,
+                            decoration:
+                                const InputDecoration(labelText: 'Longitud'),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese la longitud';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: telefonoController,
+                            decoration:
+                                const InputDecoration(labelText: 'Telefono'),
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese el telefono';
+                              }
+                              return null;
+                            },
+                          ),
+                          ElevatedButton(
+                            onPressed: _pickImagePrincipal,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromARGB(255, 245, 229,
+                                      161)), // Aquí establece el color de fondo del botón
+                            ),
+                            child: const Text('Seleccionar Imagen Principal'),
+                          ),
+                          _imagePrincipal != null
+                              ? Image.file(File(_imagePrincipal!.path))
+                              : const Text(
+                                  "No se ha seleccionado imagen principal"),
+                          ElevatedButton(
+                            onPressed: _pickImages,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromARGB(255, 245, 229,
+                                      161)), // Aquí establece el color de fondo del botón
+                            ),
+                            child: const Text('Seleccionar Imágenes'),
+                          ),
+                          _imagenes.isNotEmpty
+                              ? Wrap(
+                                  children: _imagenes
+                                      .map((img) => Image.file(File(img.path),
+                                          width: 100, height: 100))
+                                      .toList(),
+                                )
+                              : const Text(
+                                  "No se han seleccionado imágenes adicionales"),
+                          Builder(
+                            builder: (context) => ElevatedButton(
+                              onPressed: _submit,
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty
+                                    .all<Color>(const Color.fromARGB(
+                                        255,
+                                        227,
+                                        169,
+                                        241)), // Aquí establece el color de fondo del botón
+                              ),
+                              child: const Text('Registrar Propiedad'),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text('Seleccionar Imagen Principal'),
                     ),
-                    _imagePrincipal != null
-                        ? Image.file(File(_imagePrincipal!.path))
-                        : const Text("No se ha seleccionado imagen principal"),
-                    ElevatedButton(
-                      onPressed: _pickImages,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromARGB(255, 245, 229,
-                                161)), // Aquí establece el color de fondo del botón
-                      ),
-                      child: const Text('Seleccionar Imágenes'),
-                    ),
-                    _imagenes.isNotEmpty
-                        ? Wrap(
-                            children: _imagenes
-                                .map((img) => Image.file(File(img.path),
-                                    width: 100, height: 100))
-                                .toList(),
-                          )
-                        : const Text("No se han seleccionado imágenes adicionales"),
-                    Builder(
-                      builder: (context) => ElevatedButton(
-                        onPressed: _submit,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 227, 169,
-                                  241)), // Aquí establece el color de fondo del botón
-                        ),
-                        child: const Text('Registrar Propiedad'),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

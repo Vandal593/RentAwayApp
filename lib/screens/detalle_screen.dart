@@ -229,20 +229,22 @@ class DetalleScreen extends StatelessWidget {
     } else {
       return Column(
         children: propiedad.comentarios
-            .map((comentario) => ListTile(
-                  title: Text(comentario['username']),
-                  subtitle: Text(comentario['comentario']),
-                  trailing: RatingBarIndicator(
-                    rating: comentario['calificacion'].toDouble(),
-                    itemBuilder: (context, index) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    itemCount: 5,
-                    itemSize: 20.0,
-                    direction: Axis.horizontal,
+            .map(
+              (comentario) => ListTile(
+                title: Text(comentario['username']),
+                subtitle: Text(comentario['comentario']),
+                trailing: RatingBarIndicator(
+                  rating: comentario['calificacion'].toDouble(),
+                  itemBuilder: (context, index) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
                   ),
-                ))
+                  itemCount: 5,
+                  itemSize: 20.0,
+                  direction: Axis.horizontal,
+                ),
+              ),
+            )
             .toList(),
       );
     }

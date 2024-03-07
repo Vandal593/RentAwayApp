@@ -92,10 +92,46 @@ class RegisterScreen extends StatelessWidget {
                       Text('Te estas registrando como: ${userState.userRole}'),
                       const SizedBox(height: 20),
                       ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors
+                                    .blue.shade900; // Color cuando se presiona
+                              }
+                              return Colors.blue.shade600; // Color por defecto
+                            },
+                          ),
+                          shadowColor:
+                              MaterialStateProperty.all(Colors.blue.shade900),
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return 5; // Menor elevación cuando se presiona
+                              }
+                              return 10; // Elevación por defecto
+                            },
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15)),
+                        ),
+                        child: const Text(
+                          'Registrarse',
+                          style: TextStyle(fontSize: 18),
+                        ),
                         onPressed: () {
                           _registerUser(context, userState.userRole.toString());
                         },
-                        child: const Text('Registrarse'),
                       ),
                     ],
                   ),
@@ -103,7 +139,7 @@ class RegisterScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );

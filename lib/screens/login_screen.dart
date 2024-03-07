@@ -157,7 +157,7 @@ class LoginScreen extends StatelessWidget {
           GestureDetector(
             onTap: () {
               // Navegar a la pantalla de registro cuando se toca el texto
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => RegisterScreen()),
               );

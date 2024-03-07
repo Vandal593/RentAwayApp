@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentawayapp/models/propiedad.dart';
 import 'package:rentawayapp/screens/detalle_screen.dart';
+import 'package:rentawayapp/screens/editar_screen.dart';
 import 'package:rentawayapp/screens/registerPropiedad.dart';
 import 'package:rentawayapp/services/propiedadServices.dart';
 
@@ -23,41 +24,68 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: const Text(
+          "Dashboard",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
+        ),
         centerTitle: true,
+        backgroundColor: Colors.blue.shade400,
+        iconTheme: const IconThemeData(
+          color:
+              Colors.white, // Cambia el color de la flecha de regreso a blanco
+        ),
       ),
-      backgroundColor: const Color.fromARGB(255, 189, 226, 243),
-      body: StreamBuilder<List<Propiedad>>(
-        stream: propiedadesDelPropietarioStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          var propiedades = snapshot.data!;
-          if (propiedades.isEmpty) {
-            return const Center(child: Text('No hay propiedades disponibles'));
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: propiedades.length,
-            itemBuilder: (context, index) {
-              Propiedad propiedad = propiedades[index];
-              return _buildPropiedadCard(propiedad, context);
-            },
-          );
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.blue.shade400,
+              Colors.white, // Color más claro en la parte superior
+              // Color más oscuro en la parte inferior
+            ],
+          ),
+        ),
+        child: StreamBuilder<List<Propiedad>>(
+          stream: propiedadesDelPropietarioStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            var propiedades = snapshot.data!;
+            if (propiedades.isEmpty) {
+              return const Center(
+                  child: Text('No hay propiedades disponibles'));
+            }
+            return ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              itemCount: propiedades.length,
+              itemBuilder: (context, index) {
+                Propiedad propiedad = propiedades[index];
+                return _buildPropiedadCard(propiedad, context);
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    const RegistroPropiedadScreen()), // Asegúrate de cambiar esto por el constructor de tu nueva pantalla
+              builder: (context) => const RegistroPropiedadScreen(),
+            ), // Asegúrate de cambiar esto por el constructor de tu nueva pantalla
           );
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add), // Puedes cambiar el color según tu diseño
+        backgroundColor: Colors.blue.shade400,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ), // Puedes cambiar el color según tu diseño
       ),
     );
   }
@@ -127,24 +155,69 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            DetalleScreen(propiedad: propiedad),
-                      ),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor:
-                        Colors.blue.shade400, // Color del texto del botón
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditarScreen(propiedad: propiedad),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor:
+                          Colors.blue.shade400, // Color del texto del botón
+                    ),
+                    child: const Text('Editar'),
                   ),
-                  child: const Text('Ver'),
-                ),
+                  TextButton(
+                    onPressed: () async {
+                      // Confirmar antes de eliminar
+                      bool confirm = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Confirmar"),
+                            content: const Text(
+                                "¿Estás seguro de que quieres eliminar esta propiedad?"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text("Cancelar"),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text("Eliminar"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (confirm) {
+                        await PropiedadServices()
+                            .eliminarPropiedad(propiedad.id);
+                        // Mostrar mensaje de éxito/error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text("Propiedad eliminada con éxito")),
+                        );
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue.shade400,
+                    ),
+                    child: const Text('Eliminar'),
+                  ),
+                ],
               ),
             ),
           ],
