@@ -39,7 +39,7 @@ class _DetalleScreenState extends State<DetalleScreen> {
             propiedadActualizada; // Actualiza la propiedad con la nueva información
       });
     } catch (e) {
-      print("Error al actualizar la propiedad: $e");
+      debugPrint("Error al actualizar la propiedad: $e");
     }
   }
 
@@ -130,8 +130,7 @@ class _DetalleScreenState extends State<DetalleScreen> {
                               _buildSection(
                                   "Calificación",
                                   RatingBarIndicator(
-                                    rating:
-                                        2, // Asegúrate de convertir calificacion a double
+                                    rating: calcularPromedioCalificaciones(),
                                     itemBuilder: (context, index) => const Icon(
                                       Icons.star,
                                       color: Colors.amber,
@@ -337,5 +336,16 @@ class _DetalleScreenState extends State<DetalleScreen> {
         ),
       );
     }
+  }
+
+  double calcularPromedioCalificaciones() {
+    if (_propiedad.comentarios.isEmpty) {
+      return 0.0; // Retorna 0 si no hay comentarios
+    }
+    double sumaCalificaciones = 0.0;
+    for (var comentario in _propiedad.comentarios) {
+      sumaCalificaciones += comentario['calificacion'];
+    }
+    return sumaCalificaciones / _propiedad.comentarios.length;
   }
 }

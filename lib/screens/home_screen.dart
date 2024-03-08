@@ -87,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 propiedad.fotoPrincipal.isNotEmpty
                     ? propiedad.fotoPrincipal
                     : imagenPredeterminada,
-                width: 100, // Ancho más grande para la imagen
-                height: 100, // Altura fija
+                width: 125, // Ancho más grande para la imagen
+                height: 125, // Altura fija
                 fit: BoxFit.cover,
               ),
             ),

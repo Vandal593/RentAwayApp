@@ -213,6 +213,7 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Card(
+                elevation: 5,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Form(
@@ -224,8 +225,14 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                         children: <Widget>[
                           TextFormField(
                             controller: tituloController,
-                            decoration:
-                                const InputDecoration(labelText: 'Título'),
+                            decoration: InputDecoration(
+                              labelText: 'Título',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon:
+                                  const Icon(Icons.title), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese un título';
@@ -233,10 +240,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: descripcionController,
-                            decoration:
-                                const InputDecoration(labelText: 'Descripción'),
+                            decoration: InputDecoration(
+                              labelText: 'Descripción',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.description), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese una descripción';
@@ -244,10 +258,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: tipoController,
-                            decoration: const InputDecoration(
-                                labelText: 'Tipo de Propiedad'),
+                            decoration: InputDecoration(
+                              labelText: 'Tipo de Propiedad',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.holiday_village), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese el tipo de propiedad';
@@ -255,10 +276,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: precioController,
-                            decoration:
-                                const InputDecoration(labelText: 'Precio'),
+                            decoration: InputDecoration(
+                              labelText: 'Precio',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.monetization_on), // Icono de ejemplo
+                            ),
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -267,10 +295,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: calleController,
-                            decoration:
-                                const InputDecoration(labelText: 'Calle'),
+                            decoration: InputDecoration(
+                              labelText: 'Calle',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.directions), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese la calle';
@@ -278,10 +313,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: ciudadController,
-                            decoration:
-                                const InputDecoration(labelText: 'Ciudad'),
+                            decoration: InputDecoration(
+                              labelText: 'Ciudad',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.location_city), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese la ciudad';
@@ -289,10 +331,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: paisController,
-                            decoration:
-                                const InputDecoration(labelText: 'País'),
+                            decoration: InputDecoration(
+                              labelText: 'País',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon:
+                                  const Icon(Icons.flag), // Icono de ejemplo
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingrese el país';
@@ -300,10 +349,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: latitudController,
-                            decoration:
-                                const InputDecoration(labelText: 'Latitud'),
+                            decoration: InputDecoration(
+                              labelText: 'Latitud',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.location_searching), // Icono de ejemplo
+                            ),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                             validator: (value) {
@@ -313,10 +369,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: longitudController,
-                            decoration:
-                                const InputDecoration(labelText: 'Longitud'),
+                            decoration: InputDecoration(
+                              labelText: 'Longitud',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: const Icon(
+                                  Icons.location_searching), // Icono de ejemplo
+                            ),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                             validator: (value) {
@@ -326,10 +389,17 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: telefonoController,
-                            decoration:
-                                const InputDecoration(labelText: 'Telefono'),
+                            decoration: InputDecoration(
+                              labelText: 'Teléfono',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon:
+                                  const Icon(Icons.call), // Icono de ejemplo
+                            ),
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -338,28 +408,28 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                               return null;
                             },
                           ),
-                          ElevatedButton(
-                            onPressed: _pickImagePrincipal,
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 245, 229,
-                                      161)), // Aquí establece el color de fondo del botón
-                            ),
-                            child: const Text('Seleccionar Imagen Principal'),
+                          const SizedBox(height: 20),
+                          _styledButton(
+                            context,
+                            'Seleccionar Imagen Principal',
+                            () {
+                              _pickImagePrincipal();
+                            },
                           ),
+                          const SizedBox(height: 10),
                           _imagePrincipal != null
                               ? Image.file(File(_imagePrincipal!.path))
                               : const Text(
                                   "No se ha seleccionado imagen principal"),
-                          ElevatedButton(
-                            onPressed: _pickImages,
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 245, 229,
-                                      161)), // Aquí establece el color de fondo del botón
-                            ),
-                            child: const Text('Seleccionar Imágenes'),
+                          const SizedBox(height: 20),
+                          _styledButton(
+                            context,
+                            'Seleccionar Imágenes',
+                            () {
+                              _pickImages();
+                            },
                           ),
+                          const SizedBox(height: 10),
                           _imagenes.isNotEmpty
                               ? Wrap(
                                   children: _imagenes
@@ -369,18 +439,14 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
                                 )
                               : const Text(
                                   "No se han seleccionado imágenes adicionales"),
+                          const SizedBox(height: 20),
                           Builder(
-                            builder: (context) => ElevatedButton(
-                              onPressed: _submit,
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty
-                                    .all<Color>(const Color.fromARGB(
-                                        255,
-                                        227,
-                                        169,
-                                        241)), // Aquí establece el color de fondo del botón
-                              ),
-                              child: const Text('Registrar Propiedad'),
+                            builder: (context) => _styledButton(
+                              context,
+                              'Registrar Propiedad',
+                              () {
+                                _submit();
+                              },
                             ),
                           ),
                         ],
@@ -392,6 +458,44 @@ class _RegistroPropiedadScreenState extends State<RegistroPropiedadScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _styledButton(
+      BuildContext context, String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.blue.shade900; // Color cuando se presiona
+            }
+            return Colors.blue.shade600; // Color por defecto
+          },
+        ),
+        shadowColor: MaterialStateProperty.all(Colors.blue.shade900),
+        elevation: MaterialStateProperty.resolveWith<double>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return 2; // Menor elevación cuando se presiona
+            }
+            return 5; // Elevación por defecto
+          },
+        ),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 18),
       ),
     );
   }
