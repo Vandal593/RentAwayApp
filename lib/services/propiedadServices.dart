@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rentawayapp/models/comentario.dart';
 import 'package:rentawayapp/models/propiedad.dart';
 
 class PropiedadServices {
@@ -64,5 +65,15 @@ class PropiedadServices {
     return _propiedadesRef.where('tipo', isEqualTo: tipo).snapshots().map(
         (snapshot) =>
             snapshot.docs.map((doc) => Propiedad.fromFirestore(doc)).toList());
+  }
+
+  Future<void> agregarComentarioAPropiedad(
+      String propiedadId, Comentario comentario) async {
+    DocumentReference propiedadRef = _propiedadesRef.doc(propiedadId);
+    Map<String, dynamic> comentarioMap = comentario.toMap();
+
+    await propiedadRef.update({
+      'comentarios': FieldValue.arrayUnion([comentarioMap]),
+    });
   }
 }

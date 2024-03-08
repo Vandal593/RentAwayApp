@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:rentawayapp/firebase_options.dart';
+import 'package:rentawayapp/models/propiedad.dart';
+import 'package:rentawayapp/screens/comentario_screen.dart';
+import 'package:rentawayapp/screens/home_screen.dart';
+import 'package:rentawayapp/screens/login_screen.dart';
 import 'package:rentawayapp/screens/principal_screen.dart';
 import 'package:rentawayapp/services/userState.dart';
 
@@ -35,7 +39,21 @@ class MyApp extends StatelessWidget {
           ),
         ),
         title: 'Rent Away App',
-        routes: {'/': (_) => const PrincipalScreen()},
+        routes: {
+          '/': (_) => const PrincipalScreen(),
+          '/login': (context) => LoginScreen(),
+          '/home': (context) => const HomeScreen(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == '/comentarioScreen') {
+            final Propiedad propiedad = settings.arguments as Propiedad;
+            return MaterialPageRoute(builder: (context) {
+              return ComentarioScreen(propiedad: propiedad);
+            });
+          }
+          // Define otras rutas dinámicas aquí
+          return null; // Implementación de manejo de rutas no definidas
+        },
         initialRoute: '/',
       ),
     );

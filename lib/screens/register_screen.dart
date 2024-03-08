@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rentawayapp/models/propiedad.dart';
 import 'package:rentawayapp/screens/dashboard.dart';
 import 'package:rentawayapp/screens/home_screen.dart';
 import 'package:rentawayapp/screens/login_screen.dart';
@@ -10,7 +11,9 @@ import 'package:rentawayapp/services/userState.dart'; // Importa tu servicio Fir
 
 // ignore: must_be_immutable
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+  final String? redirectAfterLogin;
+  final Propiedad? propiedad;
+  RegisterScreen({super.key, this.redirectAfterLogin, this.propiedad});
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -141,7 +144,12 @@ class RegisterScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => LoginScreen(
+                                redirectAfterLogin:
+                                    redirectAfterLogin, // Asume que tienes rutas nombradas configuradas
+                                propiedad: propiedad,
+                              )),
                     );
                   },
                   child: const Text(
@@ -167,23 +175,28 @@ class RegisterScreen extends StatelessWidget {
       try {
         // Llamar al servicio de Firestore para registrar el usuario
         await FirestoreService().registerUser(name, email, password, rol);
-
+        Provider.of<UserState>(context, listen: false).login(name, rol);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado exitosamente')),
         );
-
-        // Autenticación exitosa, navegar a la pantalla correspondiente basada en el rol
-        if (rol == 'Inquilino') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
-        } else if (rol == 'Arrendatario') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DashboardScreen(userId: name)),
-          );
+        if (redirectAfterLogin != null) {
+          Navigator.of(context).pushReplacementNamed(redirectAfterLogin!,
+              arguments: propiedad); // Asume uso de rutas nombradas
+          return;
+        } else {
+          // Autenticación exitosa, navegar a la pantalla correspondiente basada en el rol
+          if (rol == 'Inquilino') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (rol == 'Arrendatario') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardScreen(userId: name)),
+            );
+          }
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

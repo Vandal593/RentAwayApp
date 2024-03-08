@@ -1,17 +1,47 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:rentawayapp/models/propiedad.dart';
+import 'package:rentawayapp/services/propiedadServices.dart';
 import 'package:rentawayapp/screens/comentario_screen.dart';
 import 'package:rentawayapp/screens/login_screen.dart';
 import 'package:rentawayapp/screens/ubicacion_screen.dart';
 import 'package:rentawayapp/services/userState.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DetalleScreen extends StatelessWidget {
+class DetalleScreen extends StatefulWidget {
   final Propiedad propiedad;
 
   const DetalleScreen({super.key, required this.propiedad});
+  @override
+  _DetalleScreenState createState() => _DetalleScreenState();
+}
+
+class _DetalleScreenState extends State<DetalleScreen> {
+  late Propiedad _propiedad;
+  final PropiedadServices _propiedadService = PropiedadServices();
+
+  @override
+  void initState() {
+    super.initState();
+    _propiedad = widget.propiedad;
+    _verificarYActualizarPropiedad();
+  }
+
+  Future<void> _verificarYActualizarPropiedad() async {
+    try {
+      final propiedadActualizada =
+          await _propiedadService.leerPropiedad(_propiedad.id);
+      setState(() {
+        _propiedad =
+            propiedadActualizada; // Actualiza la propiedad con la nueva información
+      });
+    } catch (e) {
+      print("Error al actualizar la propiedad: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +52,7 @@ class DetalleScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          propiedad.titulo.toString(),
+          _propiedad.titulo.toString(),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 30,
@@ -59,15 +89,15 @@ class DetalleScreen extends StatelessWidget {
                       children: [
                         // Tus widgets van aquí dentro
                         SizedBox(
-                          height: 150,
-                          child: propiedad.fotos
+                          height: 250,
+                          child: _propiedad.fotos
                                   .isNotEmpty // Verifica si la lista de fotos no está vacía
                               ? ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: propiedad.fotos.length,
+                                  itemCount: _propiedad.fotos.length,
                                   itemBuilder: (context, index) {
                                     return Image.network(
-                                      propiedad.fotos[index],
+                                      _propiedad.fotos[index],
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         // En caso de error al cargar la imagen, muestra una imagen predeterminada.
@@ -93,10 +123,10 @@ class DetalleScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               _buildSection(
-                                  "Descripción", propiedad.descripcion),
-                              _buildSection("Servicios", propiedad.servicios),
+                                  "Descripción", _propiedad.descripcion),
+                              _buildSection("Servicios", _propiedad.servicios),
                               _buildSection(
-                                  "Dirección", propiedad.direccion['calle']),
+                                  "Dirección", _propiedad.direccion['calle']),
                               _buildSection(
                                   "Calificación",
                                   RatingBarIndicator(
@@ -110,31 +140,6 @@ class DetalleScreen extends StatelessWidget {
                                     itemSize: 20.0,
                                     direction: Axis.horizontal,
                                   )),
-                              const Divider(),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Verifica el estado del usuario aquí
-                                  if (userState.userId != '') {
-                                    Navigator.of(context)
-                                        .push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ComentarioScreen(
-                                            propiedad: propiedad),
-                                      ),
-                                    )
-                                        .then((value) {
-                                      // Opcionalmente, recarga los comentarios si es necesario
-                                    });
-                                  } else {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginScreen()));
-                                  }
-                                },
-                                child: const Text('Agregar Comentario'),
-                              ),
-                              _buildCommentsSection(context),
                               const Divider(),
                               Row(
                                 mainAxisAlignment:
@@ -152,11 +157,40 @@ class DetalleScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => UbicacionScreen(
-                                              propiedad: propiedad)),
+                                              propiedad: _propiedad)),
                                     ),
                                   ),
                                 ],
                               ),
+                              const Divider(),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (userState.userId != '') {
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ComentarioScreen(
+                                                    propiedad: _propiedad),
+                                          ),
+                                        )
+                                        .then((_) =>
+                                            _verificarYActualizarPropiedad()); // Recarga después de regresar
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(
+                                          redirectAfterLogin:
+                                              '/comentarioScreen',
+                                          propiedad: _propiedad,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text('Agregar Comentario'),
+                              ),
+                              _buildCommentsSection(context),
                             ],
                           ),
                         ),
@@ -221,14 +255,14 @@ class DetalleScreen extends StatelessWidget {
   }
 
   Widget _buildCommentsSection(BuildContext context) {
-    if (propiedad.comentarios.isEmpty) {
+    if (_propiedad.comentarios.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(8.0),
         child: Text("No hay comentarios"),
       );
     } else {
       return Column(
-        children: propiedad.comentarios
+        children: _propiedad.comentarios
             .map(
               (comentario) => ListTile(
                 title: Text(comentario['username']),
@@ -289,7 +323,8 @@ class DetalleScreen extends StatelessWidget {
   }
 
   Future<void> reachUs(BuildContext context) async {
-    var phone = propiedad.telefono; // Asegúrate de que el formato sea correcto.
+    var phone =
+        _propiedad.telefono; // Asegúrate de que el formato sea correcto.
     final Uri whatsappUri = Uri.parse(
         "https://wa.me/$phone?text=${Uri.encodeComponent('Hola, necesito ayuda')}");
 

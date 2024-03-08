@@ -149,7 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     foregroundColor:
                         Colors.blue.shade400, // Color del texto del botón
                   ),
-                  child: const Text('Ver'),
+                  child: const Text(
+                    'Ver',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
             ),

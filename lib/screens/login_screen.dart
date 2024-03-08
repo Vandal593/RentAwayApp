@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rentawayapp/models/propiedad.dart';
 import 'package:rentawayapp/screens/dashboard.dart';
 import 'package:rentawayapp/screens/home_screen.dart';
 import 'package:rentawayapp/screens/register_screen.dart';
@@ -12,7 +13,9 @@ import 'dart:convert';
 import 'package:rentawayapp/services/userState.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+  final String? redirectAfterLogin;
+  final Propiedad? propiedad;
+  LoginScreen({super.key, this.redirectAfterLogin, this.propiedad});
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -159,7 +162,12 @@ class LoginScreen extends StatelessWidget {
               // Navegar a la pantalla de registro cuando se toca el texto
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => RegisterScreen()),
+                MaterialPageRoute(
+                    builder: (context) => RegisterScreen(
+                          redirectAfterLogin:
+                              redirectAfterLogin, // Asume que tienes rutas nombradas configuradas
+                          propiedad: propiedad,
+                        )),
               );
             },
             child: const Text(
@@ -200,19 +208,25 @@ class LoginScreen extends StatelessWidget {
         // Comparar las contraseñas encriptadas
         if (storedPassword == digest.toString()) {
           // Autenticación exitosa, navegar a la pantalla correspondiente basada en el rol
-          if (role == 'Inquilino') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-          } else if (role == 'Arrendatario') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DashboardScreen(userId: username)),
-            );
+          if (redirectAfterLogin != null) {
+            Navigator.of(context).pushReplacementNamed(redirectAfterLogin!,
+                arguments: propiedad); // Asume uso de rutas nombradas
+            return;
+          } else {
+            if (role == 'Inquilino') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            } else if (role == 'Arrendatario') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DashboardScreen(userId: username)),
+              );
+            }
+            return;
           }
-          return;
         }
       }
 

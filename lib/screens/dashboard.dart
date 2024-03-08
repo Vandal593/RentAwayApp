@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rentawayapp/models/propiedad.dart';
-import 'package:rentawayapp/screens/detalle_screen.dart';
 import 'package:rentawayapp/screens/editar_screen.dart';
 import 'package:rentawayapp/screens/registerPropiedad.dart';
 import 'package:rentawayapp/services/propiedadServices.dart';
@@ -202,12 +201,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         },
                       );
 
-                      if (confirm) {
+                      if (confirm) { 
                         await PropiedadServices()
                             .eliminarPropiedad(propiedad.id);
                         // Mostrar mensaje de éxito/error
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                               content: Text("Propiedad eliminada con éxito")),
                         );
                       }
